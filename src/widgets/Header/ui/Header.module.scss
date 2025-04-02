@@ -1,0 +1,44 @@
+@use '@/app/styles/variables.scss' as vars;
+
+.header {
+  background-color: vars.$secondary-color;
+  color: #ffffff;
+  padding: 0.8rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+
+  &:hover {
+    color: vars.$primary-color;
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navLink {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: vars.$primary-color;
+  }
+}

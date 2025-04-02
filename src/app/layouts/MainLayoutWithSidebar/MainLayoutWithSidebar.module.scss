@@ -1,0 +1,60 @@
+@use '@/app/styles/variables.scss' as vars;
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  max-width: vars.$container-max-width;
+  margin: 0 auto;
+  padding: 0 vars.$container-padding;
+  gap: 1rem;
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  min-width: 0;
+}
+
+.openFiltersButton {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 900;
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .openFiltersButton {
+    display: inline-flex;
+  }
+  .contentWrapper {
+    padding: 0;
+    gap: 0;
+  }
+  .mainContent {
+    padding: 1rem vars.$container-padding;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebarLayout {
+    flex-shrink: 0;
+    width: 280px;
+    position: static;
+    height: auto;
+    border-left: 1px solid #eee;
+    box-shadow: none;
+    transform: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

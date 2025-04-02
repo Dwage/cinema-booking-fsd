@@ -1,0 +1,47 @@
+@use '@/app/styles/variables.scss' as vars;
+
+.seat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  margin: 3px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 4px 4px 2px 2px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.1s ease;
+  user-select: none;
+  background-color: #fff;
+
+  &:focus {
+    outline: 2px solid vars.$primary-color;
+    outline-offset: 1px;
+  }
+}
+
+.available {
+  background-color: #fff;
+  border-color: #ccc;
+  color: #555;
+
+  &:hover:not(:disabled) {
+    background-color: #e0e0e0;
+  }
+}
+
+.booked {
+  background-color: #6c757d;
+  border-color: #5a6268;
+  color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.selected {
+  background-color: #28a745;
+  border-color: #1e7e34;
+  color: #ffffff;
+}

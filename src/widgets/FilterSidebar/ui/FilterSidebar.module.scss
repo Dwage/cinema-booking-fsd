@@ -1,0 +1,89 @@
+@use '@/app/styles/variables.scss' as vars;
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  max-width: 90%;
+  height: 100%;
+  background-color: vars.$background-color;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 1rem;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1010;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: vars.$text-color;
+}
+
+.closeButton {
+  padding: 0.2rem;
+  line-height: 1;
+  font-size: 1.8rem;
+  color: #aaa;
+
+  &:hover {
+    color: vars.$text-color;
+    background-color: transparent !important;
+  }
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.filterGroup {
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    transform: translateX(0);
+    position: static;
+    height: auto;
+    box-shadow: none;
+    border-left: 1px solid #eee;
+    width: 280px;
+  }
+
+  .overlay,
+  .closeButton {
+    display: none;
+  }
+}

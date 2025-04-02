@@ -1,0 +1,109 @@
+.bookingModalContent {
+  max-width: 700px;
+}
+
+.sessionInfo {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+  margin-bottom: 1rem;
+  margin-top: -0.5rem;
+}
+
+.widgetSection {
+  margin-bottom: 2rem;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.selectedList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+
+  li {
+    padding: 0.3rem 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #eee;
+  }
+}
+
+.removeSeatBtn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 0 0.3rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #a71d2a;
+  }
+}
+
+.totalAmount {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+
+    &:disabled {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.successMessage {
+  text-align: center;
+  padding: 2rem 1rem;
+
+  h3 {
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+  p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+}

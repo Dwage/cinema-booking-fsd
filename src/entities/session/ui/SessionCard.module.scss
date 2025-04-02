@@ -1,0 +1,77 @@
+@use '@/app/styles/variables.scss' as vars;
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  margin-bottom: 1rem;
+  color: inherit;
+  text-decoration: none;
+  height: 100%;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.posterWrapper {
+  height: 600px;
+  width: 100%;
+  background-color: #f0f0f0;
+  display: block;
+  overflow: hidden;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: vars.$text-color;
+}
+
+.details {
+  flex-grow: 1;
+  margin-bottom: 0.75rem;
+}
+
+.detailItem {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.4;
+
+  strong {
+    color: vars.$text-color;
+    margin-right: 0.3em;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 0.8rem;
+  }
+  .title {
+    font-size: 1rem;
+  }
+  .detailItem {
+    font-size: 0.8rem;
+  }
+}
