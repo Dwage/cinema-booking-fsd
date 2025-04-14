@@ -1,83 +1,100 @@
-import { API_BASE_URL } from '@/shared/config/api'
-import type { Session, SessionDetails } from '../model/types'
-import type { FilterState } from '@/features/filters/model/store'
+import { API_BASE_URL } from "@/shared/config/api";
+import type { Session, SessionDetails } from "../model/types";
+import type { FilterState } from "@/features/filters/model/store";
 
 export const fetchSessions = async (
   filters?: Partial<FilterState>
 ): Promise<Session[]> => {
-  const url = new URL(`${API_BASE_URL}/sessions`)
+  const basePath = `${API_BASE_URL}/sessions`;
+  const params = new URLSearchParams();
 
   if (filters) {
     if (filters.selectedAgeRatings && filters.selectedAgeRatings.length > 0) {
       filters.selectedAgeRatings.forEach((rating) => {
-        url.searchParams.append('ageRating', String(rating))
-      })
+        params.append("ageRating", String(rating));
+      });
     }
-    if (filters.searchTerm && filters.searchTerm.trim() !== '') {
-      url.searchParams.append('movieTitle_like', filters.searchTerm.trim())
+    if (filters.searchTerm && filters.searchTerm.trim() !== "") {
+      params.append("movieTitle", filters.searchTerm.trim());
     }
     if (filters.dateRange?.start) {
-      url.searchParams.append(
-        'dateTime_gte',
-        `${filters.dateRange.start}T00:00:00Z`
-      )
+      params.append("dateFrom", filters.dateRange.start);
     }
     if (filters.dateRange?.end) {
-      url.searchParams.append(
-        'dateTime_lte',
-        `${filters.dateRange.end}T23:59:59Z`
-      )
+      params.append("dateTo", filters.dateRange.end);
+    }
+    if (filters.selectedGenres && filters.selectedGenres.length > 0) {
+      filters.selectedGenres.forEach((genre) => {
+        params.append("genres", genre);
+      });
     }
   }
 
-  url.searchParams.append('_sort', 'dateTime')
-  url.searchParams.append('_order', 'asc')
+  const urlString = `${basePath}?${params.toString()}`;
 
   try {
-    console.log('Requesting URL:', url.toString())
-    const response = await fetch(url.toString())
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    const data: Session[] = await response.json()
+    const response = await fetch(urlString, {
+      method: "GET",
+      credentials: "include",
+    });
 
-    let filteredData = data
-    if (filters?.selectedGenres && filters.selectedGenres.length > 0) {
-      const selectedGenresSet = new Set(filters.selectedGenres)
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    }
+
+    const data: Session[] = await response.json();
+
+    let filteredData = data;
+    if (
+      filters?.selectedGenres &&
+      filters.selectedGenres.length > 0 &&
+      !params.has("genres")
+    ) {
+      const selectedGenresSet = new Set(filters.selectedGenres);
       filteredData = filteredData.filter((session) =>
         session.genres.some((genre) => selectedGenresSet.has(genre))
-      )
+      );
     }
-    return filteredData
+
+    return filteredData;
   } catch (error) {
-    console.error('Failed to fetch sessions:', error)
-    throw error
+    console.error("Failed to fetch sessions:", error);
+    throw error;
   }
-}
+};
 
 export const fetchSessionDetailsById = async (
   sessionId: string
 ): Promise<SessionDetails | null> => {
-  const url = new URL(`${API_BASE_URL}/session-details`)
-  url.searchParams.append('id', sessionId)
+  const urlString = `${API_BASE_URL}/sessions/${sessionId}`;
 
   try {
-    const response = await fetch(url.toString())
+    const response = await fetch(urlString, {
+      method: "GET",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
-        return null
+        return null;
       }
-      throw new Error(`HTTP error! status: ${response.status}`)
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
 
-    const data: SessionDetails[] = await response.json()
+    const data: SessionDetails = await response.json();
 
-    if (data.length === 0) {
-      return null
+    if (!data || Object.keys(data).length === 0) {
+      return null;
     }
 
-    return data[0]
+    return data;
   } catch (error) {
-    console.error(`Failed to fetch session details for ID ${sessionId}:`, error)
-    throw error
+    console.error(
+      `Failed to fetch session details for ID ${sessionId}:`,
+      error
+    );
+    throw error;
   }
-}
+};

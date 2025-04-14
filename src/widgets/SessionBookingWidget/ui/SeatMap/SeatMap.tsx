@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react'
-import { Seat, SeatStatus } from '../Seat'
-import { getSeatPrice } from '../../lib/getSeatPrice'
+import React, { useMemo } from "react";
+import { Seat, SeatStatus } from "../Seat";
+import { getSeatPrice } from "../../lib/getSeatPrice";
 
 interface SeatMapProps {
-  rows: number
-  seatsPerRow: number
-  bookedSeats: number[]
-  selectedSeats: number[]
-  basePrice: number
-  onToggleSeat: (seatNumber: number, price: number) => void
+  rows: number;
+  seatsPerRow: number;
+  bookedSeats: number[];
+  selectedSeats: number[];
+  basePrice: number;
+  onToggleSeat: (seatNumber: number, price: number) => void;
 }
 
 export const SeatMap: React.FC<SeatMapProps> = ({
@@ -19,28 +19,39 @@ export const SeatMap: React.FC<SeatMapProps> = ({
   basePrice,
   onToggleSeat,
 }) => {
-  const bookedSet = useMemo(() => new Set(bookedSeats), [bookedSeats])
-  const selectedSet = useMemo(() => new Set(selectedSeats), [selectedSeats])
+  const bookedSet = useMemo(
+    () => new Set(bookedSeats.map((seat) => parseInt(String(seat), 10))),
+    [bookedSeats]
+  );
+  const selectedSet = useMemo(
+    () => new Set(selectedSeats.map((seat) => parseInt(String(seat), 10))),
+    [selectedSeats]
+  );
 
   const handleSeatClick = (seatNumber: number) => {
-    const price = getSeatPrice(seatNumber, basePrice)
-    onToggleSeat(seatNumber, price)
-  }
+    const price = getSeatPrice(seatNumber, basePrice);
+    onToggleSeat(seatNumber, price);
+  };
+
+  console.log(bookedSeats);
 
   const renderSeats = () => {
-    const seatElements = []
+    const seatElements = [];
     for (let row = 0; row < rows; row++) {
       for (let seatIndex = 0; seatIndex < seatsPerRow; seatIndex++) {
-        const seatNumber = row * seatsPerRow + seatIndex + 1
-        let status: SeatStatus = 'available'
+        const seatNumber = row * seatsPerRow + seatIndex + 1;
+        let status: SeatStatus = "available";
 
+        if (selectedSet.has(seatNumber)) {
+          status = "selected";
+        }
         if (bookedSet.has(seatNumber)) {
-          status = 'booked'
+          status = "booked";
         } else if (selectedSet.has(seatNumber)) {
-          status = 'selected'
+          status = "selected";
         }
 
-        const price = getSeatPrice(seatNumber, basePrice)
+        const price = getSeatPrice(seatNumber, basePrice);
 
         seatElements.push(
           <Seat
@@ -50,11 +61,11 @@ export const SeatMap: React.FC<SeatMapProps> = ({
             price={price}
             onClick={handleSeatClick}
           />
-        )
+        );
       }
     }
-    return seatElements
-  }
+    return seatElements;
+  };
 
   return (
     <div>
@@ -67,5 +78,5 @@ export const SeatMap: React.FC<SeatMapProps> = ({
         {renderSeats()}
       </div>
     </div>
-  )
-}
+  );
+};

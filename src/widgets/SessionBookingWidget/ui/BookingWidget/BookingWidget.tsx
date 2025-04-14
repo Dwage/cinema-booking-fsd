@@ -1,26 +1,26 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
-import { Modal } from '@/shared/ui/Modal/Modal'
-import { SeatMap } from '../SeatMap/SeatMap'
-import { Button, ButtonVariant } from '@/shared/ui/Button/Button'
-import type { HallInfo } from '@/entities/session'
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { Modal } from "@/shared/ui/Modal/Modal";
+import { SeatMap } from "../SeatMap/SeatMap";
+import { Button, ButtonVariant } from "@/shared/ui/Button/Button";
+import type { HallInfo } from "@/entities/session";
 import {
   submitOrder,
   OrderPayload,
   OrderSeatInfo,
   OrderContactInfo,
-} from '@/entities/order'
-import styles from './BookingWidget.module.scss'
+} from "@/entities/order";
+import styles from "./BookingWidget.module.scss";
 
 interface SelectedSeatInfo extends OrderSeatInfo {}
 interface ContactFormState extends OrderContactInfo {}
 
 interface BookingWidgetProps {
-  isOpen: boolean
-  onClose: () => void
-  hallInfo: HallInfo
-  sessionId: string
-  sessionTitle?: string
-  sessionTime?: string
+  isOpen: boolean;
+  onClose: () => void;
+  hallInfo: HallInfo;
+  sessionId: string;
+  sessionTitle?: string;
+  sessionTime?: string;
 }
 
 export const BookingWidget: React.FC<BookingWidgetProps> = ({
@@ -31,47 +31,47 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
   sessionTitle,
   sessionTime,
 }) => {
-  const [selectedSeats, setSelectedSeats] = useState<SelectedSeatInfo[]>([])
+  const [selectedSeats, setSelectedSeats] = useState<SelectedSeatInfo[]>([]);
   const [contactInfo, setContactInfo] = useState<ContactFormState>({
-    name: '',
-    email: '',
-    phone: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
 
   const handleToggleSeat = useCallback((seatNumber: number, price: number) => {
     setSelectedSeats((prevSelected) => {
       const existingIndex = prevSelected.findIndex(
         (s) => s.seatNumber === seatNumber
-      )
+      );
       if (existingIndex > -1) {
-        return prevSelected.filter((_, index) => index !== existingIndex)
+        return prevSelected.filter((_, index) => index !== existingIndex);
       } else {
-        return [...prevSelected, { seatNumber, price }]
+        return [...prevSelected, { seatNumber, price }];
       }
-    })
-    setSubmitSuccess(false)
-    setSubmitError(null)
-  }, [])
+    });
+    setSubmitSuccess(false);
+    setSubmitError(null);
+  }, []);
 
   const totalAmount = useMemo(() => {
-    return selectedSeats.reduce((sum, seat) => sum + seat.price, 0)
-  }, [selectedSeats])
+    return selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+  }, [selectedSeats]);
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setContactInfo((prev) => ({ ...prev, [name]: value }))
-    setSubmitSuccess(false)
-    setSubmitError(null)
-  }
+    const { name, value } = event.target;
+    setContactInfo((prev) => ({ ...prev, [name]: value }));
+    setSubmitSuccess(false);
+    setSubmitError(null);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setIsSubmitting(true)
-    setSubmitError(null)
-    setSubmitSuccess(false)
+    event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
 
     try {
       const orderData: OrderPayload = {
@@ -80,44 +80,44 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
         totalAmount: totalAmount,
         contactInfo: contactInfo,
         orderTimestamp: new Date().toISOString(),
-      }
+      };
 
-      const createdOrder = await submitOrder(orderData)
-      console.log('Order submitted successfully:', createdOrder)
+      const createdOrder = await submitOrder(orderData);
+      console.log("Order submitted successfully:", createdOrder);
 
-      setSelectedSeats([])
+      setSelectedSeats([]);
       setTimeout(() => {
-        setSubmitSuccess(true)
-      }, 2000)
+        setSubmitSuccess(true);
+      }, 2000);
     } catch (error) {
-      console.error('Order submission failed:', error)
+      console.error("Order submission failed:", error);
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'Failed to submit order. Please try again.'
-      )
+          : "Failed to submit order. Please try again."
+      );
     } finally {
       setTimeout(() => {
-        setIsSubmitting(false)
-      }, 2000)
+        setIsSubmitting(false);
+      }, 2000);
     }
-  }
+  };
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedSeats([])
-      setContactInfo({ name: '', email: '', phone: '' })
-      setIsSubmitting(false)
-      setSubmitError(null)
-      setSubmitSuccess(false)
+      setSelectedSeats([]);
+      setContactInfo({ name: "", email: "", phone: "" });
+      setIsSubmitting(false);
+      setSubmitError(null);
+      setSubmitSuccess(false);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Booking tickets for: ${sessionTitle || 'Session'}`}
+      title={`Booking tickets for: ${sessionTitle || "Session"}`}
       containerClassName={styles.bookingModalContainer}
       className={styles.bookingModalContent}
     >
@@ -126,7 +126,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
           <h3>Booking Successful!</h3>
           <p>
             Your order has been placed. Details sent to
-            {contactInfo.email || 'your email'}.
+            {contactInfo.email || "your email"}.
           </p>
           <Button onClick={onClose}>Close</Button>
         </div>
@@ -236,11 +236,11 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
                 isSubmitting
               }
             >
-              {isSubmitting ? 'Processing...' : 'Confirm Booking'}
+              {isSubmitting ? "Processing..." : "Confirm Booking"}
             </Button>
           </div>
         </form>
       )}
     </Modal>
-  )
-}
+  );
+};
